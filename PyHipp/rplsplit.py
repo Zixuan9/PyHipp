@@ -97,14 +97,16 @@ class RPLSplit(DPT.DPObject):
 			else: 
 				if 'HPCScriptsDir' not in kwargs.keys():
 					kwargs['HPCScriptsDir'] = ''
-				print('Adding RPLLFP slurm script for channel {:03d} to job queue'.format(channelNumber))
-				os.system('sbatch ' + kwargs['HPCScriptsDir'] + 'rpllfp-slurm.sh')
-				if not self.args['SkipSort']:
-					print('Adding RPLHighPass and Mountain Sort slurm script for channel {:03d} to job queue'.format(channelNumber))
-					os.system('sbatch '+ kwargs['HPCScriptsDir'] + 'rplhighpass-sort-slurm.sh')
-				else:
-					print('Adding RPLHighPass slurm script for channel {:03d} to job queue'.format(channelNumber))
-					os.system('sbatch ' + kwargs['HPCScriptsDir'] + 'rplhighpass-slurm.sh')
+				if not self.args['SkipLFP']:
+					print('Adding RPLLFP slurm script for channel {:03d} to job queue'.format(channelNumber))
+					os.system('sbatch ' + kwargs['HPCScriptsDir'] + 'rpllfp-slurm.sh')
+				if not self.args['SkipHighPass']:
+					if not self.args['SkipSort']:
+						print('Adding RPLHighPass and Mountain Sort slurm script for channel {:03d} to job queue'.format(channelNumber))
+						os.system('sbatch '+ kwargs['HPCScriptsDir'] + 'rplhighpass-sort-slurm.sh')
+					else:
+						print('Adding RPLHighPass slurm script for channel {:03d} to job queue'.format(channelNumber))
+						os.system('sbatch ' + kwargs['HPCScriptsDir'] + 'rplhighpass-slurm.sh')
 			os.chdir(directory)
 			print('Channel {:03d} processed'.format(channelNumber))
 			return 
